@@ -1,0 +1,117 @@
+<script>
+  // 块级作用域的好处
+  (function () {
+    console.log('块级作用域的好处');
+    console.log('1. 避免内层变量覆盖外层');
+    var i = 1;
+
+    function func() {
+      console.log(i); // 在func内部就算下面的if没执行,但也会变量提升，在最上面会出现 var i; log的时候会出现undefined
+      if (0) {
+        var i = 2;
+      }
+    }
+
+    func(); // undefined
+  })();
+
+  // 使用var 局部变量泄露为全局
+  (function () {
+    console.log('2. 避免用于计数的循环变量泄露为全局变量');
+    var str = 'world';
+    for (var i = 0; i < str.length; i++) {
+    }
+    console.log(i); // 会输出最后一个i的情况 5
+  })();
+  // 使用let ，则有自己的作用域
+  (function () {
+    var str = 'world';
+    for (let i = 0; i < str.length; i++) {
+    }
+    // console.log(i); // undefined 在for循环之外，并未定义i ，报错： Uncaught ReferenceError: i is not defined
+  })();
+
+  /* ES6的块级作用域 */
+  (function () {
+    console.log('let 为js 新增了块级作用域');
+    function f1() {
+      let n = 2;
+      if (true) {
+        let n = 10;
+      }
+      console.log(n); // 2 表明内外不受影响
+    }
+
+    f1();
+  })();
+
+  (function () {
+    console.log('块级作用域允许任意嵌套');
+    {
+      {
+        let i = 1;
+        console.log(i); // 1
+      }
+    }
+
+    {
+      {
+        {
+          {
+            let i = 2;
+          }
+          // console.log(i); // 报错
+        }
+      }
+    }
+
+    console.log('解脱了立即执行匿名函数');
+    (function () {
+      var i = 1;
+      console.log(i);
+    })();
+    {
+      let i = 1;
+      console.log(i);
+    }
+  })();
+
+  // ES6中，函数本身作用域，在其所在块级作用域内 但是怎么试都报错。 书上是不是又错了，有问题。
+  // 我觉得此处应该在nodejs中运行。
+  (function () {
+    // 在ES6中
+    function f() {
+      console.log('outer');
+    }
+
+    (function () {
+      if (false) {
+        function f() {
+          console.log('inside');
+        }
+      }
+      f(); // 此处报错 Uncaught TypeError: f is not a function
+    })();
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
